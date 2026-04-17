@@ -1,0 +1,182 @@
+/* Edit Post Page Styles */
+
+.edit-post-page {
+  min-height: calc(100vh - 80px);
+  background-color: #f8f9f4;
+  padding: 2rem;
+}
+
+.edit-post-container {
+  max-width: 700px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(99, 153, 34, 0.15);
+}
+
+.edit-post-container h1 {
+  color: #3B6D11;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+}
+
+.edit-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  color: #3B6D11;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #639922;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3B6D11;
+  box-shadow: 0 0 0 3px rgba(99, 153, 34, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
+.cancel-btn, .submit-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.cancel-btn:hover {
+  background: #d0d0d0;
+}
+
+.submit-btn {
+  background: #639922;
+  color: white;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #3B6D11;
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 4px;
+  border-left: 4px solid #c62828;
+  margin-bottom: 1.5rem;
+}
+
+.auth-required {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: white;
+  border-radius: 8px;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(99, 153, 34, 0.15);
+}
+
+.auth-required h2 {
+  color: #3B6D11;
+  margin-bottom: 1rem;
+}
+
+.auth-required p {
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.auth-required button {
+  background: #639922;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.auth-required button:hover {
+  background: #3B6D11;
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #639922;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .edit-post-page {
+    padding: 1rem;
+  }
+
+  .edit-post-container {
+    padding: 1.5rem;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .cancel-btn, .submit-btn {
+    width: 100%;
+  }
+}

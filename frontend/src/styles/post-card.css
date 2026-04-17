@@ -1,0 +1,149 @@
+/* PostCard Styles */
+
+.post-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(99, 153, 34, 0.1);
+  overflow: hidden;
+  transition: box-shadow 0.3s, transform 0.3s;
+  border: 1px solid #e8eee0;
+}
+
+.post-card:hover {
+  box-shadow: 0 4px 16px rgba(99, 153, 34, 0.2);
+  transform: translateY(-2px);
+}
+
+.post-header {
+  padding: 1rem;
+  border-bottom: 1px solid #e8eee0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.post-author {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
+}
+
+.author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #639922 0%, #3B6D11 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.post-author div h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.post-author div .post-meta {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.post-category {
+  display: inline-block;
+  background-color: #e8f5e9;
+  color: #3B6D11;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  border: 1px solid #639922;
+}
+
+.post-content {
+  padding: 1.5rem;
+}
+
+.post-content h2 {
+  font-size: 1.5rem;
+  color: #3B6D11;
+  margin-bottom: 0.5rem;
+  margin-top: 0;
+  font-weight: 600;
+}
+
+.post-content p {
+  color: #666;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.post-actions {
+  padding: 1rem;
+  border-top: 1px solid #e8eee0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.action-btn {
+  background: none;
+  border: 1px solid #e8eee0;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  color: #639922;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  flex: 1;
+  max-width: 150px;
+}
+
+.action-btn:hover {
+  background-color: #f5f5f5;
+  border-color: #d1d5db;
+  color: #333;
+}
+
+.action-btn.liked {
+  background-color: #fef3c7;
+  color: #ca8a04;
+  border-color: #facc15;
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.post-footer {
+  padding: 0 1rem 1rem 1rem;
+  color: #999;
+  font-size: 0.85rem;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .post-header {
+    flex-wrap: wrap;
+  }
+
+  .post-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .post-actions {
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    max-width: 100%;
+  }
+}

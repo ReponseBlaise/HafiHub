@@ -1,0 +1,128 @@
+/* Home Page Styles */
+
+.home-page {
+  width: 100%;
+}
+
+.home-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #639922;
+}
+
+.home-header h1 {
+  font-size: 2rem;
+  color: #3B6D11;
+  font-weight: 700;
+}
+
+.home-header .btn-primary {
+  white-space: nowrap;
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, #639922 0%, #3B6D11 100%);
+  color: white;
+  padding: 3rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  margin-bottom: 2rem;
+  border: 2px solid #97C459;
+}
+
+.welcome-banner h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.welcome-banner p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  opacity: 0.95;
+  color: #f0f0f0;
+}
+
+.welcome-banner .btn-primary {
+  background-color: #EF9F27;
+  color: white;
+  font-weight: 600;
+  padding: 12px 24px;
+}
+
+.welcome-banner .btn-primary:hover {
+  background-color: #BA7517;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.posts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 2rem;
+  margin-top: 2rem;
+  border-top: 2px solid #639922;
+}
+
+.pagination button {
+  min-width: 120px;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .home-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .home-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .home-header .btn-primary {
+    width: 100%;
+  }
+
+  .welcome-banner {
+    padding: 2rem 1rem;
+  }
+
+  .welcome-banner h2 {
+    font-size: 1.5rem;
+  }
+
+  .welcome-banner p {
+    font-size: 1rem;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .pagination button {
+    width: 100%;
+  }
+}
