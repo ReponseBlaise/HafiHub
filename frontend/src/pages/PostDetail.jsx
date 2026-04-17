@@ -32,8 +32,8 @@ export default function PostDetail() {
       setLikeCount(postData.data.likeCount || 0);
       
       // Fetch comments
-      const commentsData = await api.get(`/comments?postId=${id}`);
-      setComments(commentsData.data || []);
+      const commentsData = await api.getComments(id);
+      setComments(commentsData.data || commentsData.comments || []);
     } catch (err) {
       setError(err.message || 'Failed to load post');
     } finally {

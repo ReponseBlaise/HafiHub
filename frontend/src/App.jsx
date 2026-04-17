@@ -10,6 +10,7 @@ import PostDetail from './pages/PostDetail';
 import CreatePost from './pages/CreatePost';
 import EditPost from './pages/EditPost';
 import UserProfile from './pages/UserProfile';
+import EditProfile from './pages/EditProfile';
 import Events from './pages/Events';
 import EventDetail from './pages/EventDetail';
 import CreateEvent from './pages/CreateEvent';
@@ -48,6 +49,7 @@ function AppContent() {
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event/:id" element={<EventDetail />} />
           <Route path="/event/:id/edit" element={<EditEvent />} />

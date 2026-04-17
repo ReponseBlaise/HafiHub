@@ -75,7 +75,7 @@ export default function UserProfile() {
             {isOwnProfile && (
               <button 
                 className="edit-profile-btn"
-                onClick={() => alert('Profile editing coming soon!')}
+                onClick={() => navigate('/edit-profile')}
               >
                 Edit Profile
               </button>
