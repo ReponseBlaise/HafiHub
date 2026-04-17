@@ -1,0 +1,48 @@
+// Generator block (for Prisma client)
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Datasource (PostgreSQL)
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String
+  password  String
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts     Post[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+// Post model
+model Post {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  category    String  // job, quick_job, product, event
+  location    String
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([category])
+  @@index([location])
+  @@index([createdAt])
+}
+
