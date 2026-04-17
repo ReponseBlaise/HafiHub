@@ -4,11 +4,16 @@ export const getUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    if (!userId) {
-      return res.status(400).json({ error: 'Missing userId parameter' });
+    if (!userId || userId === 'undefined') {
+      return res.status(400).json({ error: 'User ID required' });
     }
 
-    const profile = await userService.getUserProfile(parseInt(userId));
+    const parsedUserId = parseInt(userId);
+    if (isNaN(parsedUserId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
+
+    const profile = await userService.getUserProfile(parsedUserId);
 
     res.json({
       success: true,

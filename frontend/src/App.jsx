@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
@@ -17,6 +17,18 @@ import CreateEvent from './pages/CreateEvent';
 import EditEvent from './pages/EditEvent';
 import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
+
+// Guard component to validate user profile ID
+function UserProfileGuard() {
+  const { id } = useParams();
+  
+  // Redirect to home if id is invalid
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/" replace />;
+  }
+  
+  return <UserProfile />;
+}
 
 function AppContent() {
   const { loading } = useAuth();
@@ -48,7 +60,7 @@ function AppContent() {
           <Route path="/post/:id" element={<PostDetail />} />
           <Route path="/post/:id/edit" element={<EditPost />} />
           <Route path="/create-post" element={<CreatePost />} />
-          <Route path="/profile/:id" element={<UserProfile />} />
+          <Route path="/profile/:id" element={<UserProfileGuard />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event/:id" element={<EventDetail />} />
