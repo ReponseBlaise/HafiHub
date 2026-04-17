@@ -11,14 +11,15 @@ datasource db {
 
 // User model
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  name      String
-  password  String
-  location  String?
-  contact   String? // Phone number or contact info
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                  Int     @id @default(autoincrement())
+  email               String  @unique
+  name                String
+  password            String
+  location            String?
+  contact             String? // Phone number or contact info
+  profilePictureUrl   String? // User's profile picture
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   // Relationships
   posts     Post[]
@@ -38,6 +39,7 @@ model Post {
   description String
   category    String  // job, quick_job, product, event
   location    String
+  imageUrl    String? // Optional image for the post
   userId      Int
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

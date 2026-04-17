@@ -25,7 +25,7 @@ export const listPosts = async (req, res) => {
 
 export const createPost = async (req, res) => {
   try {
-    const { title, description, category, location } = req.body;
+    const { title, description, category, location, imageUrl } = req.body;
 
     // Validate input
     if (!title || !description || !category || !location) {
@@ -38,7 +38,8 @@ export const createPost = async (req, res) => {
       description,
       category,
       location,
-      req.userId
+      req.userId,
+      imageUrl
     );
 
     res.status(201).json({
@@ -95,7 +96,7 @@ export const searchPosts = async (req, res) => {
 export const updatePost = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, category, location } = req.body;
+    const { title, description, category, location, imageUrl } = req.body;
 
     // Validate input
     if (!title || !description || !category || !location) {
@@ -108,7 +109,8 @@ export const updatePost = async (req, res) => {
       title,
       description,
       category,
-      location
+      location,
+      imageUrl
     );
 
     res.json({

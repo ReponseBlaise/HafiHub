@@ -38,13 +38,14 @@ export const getAllPosts = async (limit = 20, skip = 0) => {
   return { posts: postsWithCounts, total };
 };
 
-export const createPost = async (title, description, category, location, userId) => {
+export const createPost = async (title, description, category, location, userId, imageUrl = null) => {
   const post = await prisma.post.create({
     data: {
       title,
       description,
       category,
       location,
+      imageUrl: imageUrl || null,
       userId
     },
     include: {
@@ -171,7 +172,7 @@ export const searchPosts = async (filters = {}, limit = 20, skip = 0) => {
   };
 };
 
-export const updatePost = async (postId, userId, title, description, category, location) => {
+export const updatePost = async (postId, userId, title, description, category, location, imageUrl) => {
   const post = await prisma.post.findUnique({
     where: { id: postId }
   });
@@ -190,7 +191,8 @@ export const updatePost = async (postId, userId, title, description, category, l
       title: title || post.title,
       description: description || post.description,
       category: category || post.category,
-      location: location || post.location
+      location: location || post.location,
+      imageUrl: imageUrl !== undefined ? imageUrl : post.imageUrl
     },
     include: {
       user: {

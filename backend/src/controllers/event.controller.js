@@ -144,3 +144,84 @@ export async function deleteEvent(req, res) {
     res.status(500).json({ success: false, error: err.message });
   }
 }
+
+// Get all events hosted by the current user
+export async function getHostEvents(req, res) {
+  try {
+    const userId = req.user.id;
+    const { page = 1, limit = 10 } = req.query;
+    const skip = (page - 1) * limit;
+
+    const [events, total] = await Promise.all([
+      prisma.event.findMany({
+        where: { userId },
+        include: {
+          user: { select: { id: true, name: true, email: true, contact: true } },
+          bookings: { include: { user: { select: { id: true, name: true, email: true, contact: true } } } }
+        },
+        skip,
+        take: parseInt(limit),
+        orderBy: { eventDate: 'asc' }
+      }),
+      prisma.event.count({ where: { userId } })
+    ]);
+
+    res.json({
+      success: true,
+      data: events,
+      pagination: {
+        page: parseInt(page),
+        limit: parseInt(limit),
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+}
+
+// Get bookings for a specific event (only for the event host)
+export async function getEventBookings(req, res) {
+  try {
+    const { id } = req.params;
+    const userId = req.user.id;
+
+    const event = await prisma.event.findUnique({
+      where: { id: parseInt(id) },
+      include: {
+        bookings: {
+          include: {
+            user: { select: { id: true, name: true, email: true, contact: true, location: true } }
+          },
+          orderBy: { bookedAt: 'desc' }
+        }
+      }
+    });
+
+    if (!event) {
+      return res.status(404).json({ success: false, error: 'Event not found' });
+    }
+
+    // Check if user is the event host
+    if (event.userId !== userId) {
+      return res.status(403).json({ success: false, error: 'Not authorized to view bookings for this event' });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        event: {
+          id: event.id,
+          title: event.title,
+          eventDate: event.eventDate,
+          capacity: event.capacity,
+          booked: event.booked
+        },
+        bookings: event.bookings
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+}
