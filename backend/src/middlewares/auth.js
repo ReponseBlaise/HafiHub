@@ -14,6 +14,8 @@ export const authMiddleware = (req, res, next) => {
     return res.status(401).json({ error: 'Invalid or expired token' });
   }
 
+  // Set both req.userId and req.user for compatibility with different controllers
   req.userId = decoded.userId;
+  req.user = { id: decoded.userId };
   next();
 };

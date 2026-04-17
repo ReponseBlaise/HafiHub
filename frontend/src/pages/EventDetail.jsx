@@ -16,8 +16,10 @@ export default function EventDetail() {
 
   useEffect(() => {
     loadEvent();
-    checkBooking();
-  }, [id]);
+    if (isAuthenticated && user) {
+      checkBooking();
+    }
+  }, [id, isAuthenticated, user]);
 
   const loadEvent = async () => {
     try {
@@ -33,13 +35,16 @@ export default function EventDetail() {
   };
 
   const checkBooking = async () => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || !user) return;
     try {
       const response = await api.getBookings();
-      const booked = response.data.some((b) => b.eventId === parseInt(id));
-      setIsBooked(booked);
+      if (response && response.data) {
+        const booked = response.data.some((b) => b.eventId === parseInt(id));
+        setIsBooked(booked);
+      }
     } catch (err) {
       console.error('Failed to check booking:', err);
+      // Silently fail - booking check is not critical
     }
   };
 
