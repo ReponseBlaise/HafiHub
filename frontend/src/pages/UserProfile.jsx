@@ -15,10 +15,18 @@ export default function UserProfile() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    loadUserProfile();
+    if (id) {
+      loadUserProfile();
+    }
   }, [id]);
 
   const loadUserProfile = async () => {
+    if (!id) {
+      setError('User ID is required');
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
