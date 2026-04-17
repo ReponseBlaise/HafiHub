@@ -1,0 +1,400 @@
+/* Event Bookings Page Styles */
+
+.event-bookings-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+}
+
+.back-btn {
+  margin-bottom: 2rem;
+  padding: 0.75rem 1.5rem;
+  background: #639922;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.back-btn:hover {
+  background: #528419;
+  transform: translateX(-4px);
+}
+
+.event-header {
+  background: linear-gradient(135deg, #639922 0%, #5a8b1a 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(99, 153, 34, 0.2);
+}
+
+.event-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 2rem;
+}
+
+.event-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.event-date {
+  margin: 0;
+  font-size: 1.1rem;
+  opacity: 0.95;
+}
+
+.capacity-info {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.capacity-stat,
+.booked-stat,
+.available-stat {
+  font-size: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.no-bookings {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.no-bookings p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+.bookings-info {
+  background: #e8f5e9;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #639922;
+}
+
+.bookings-info p {
+  margin: 0;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.bookings-table-responsive {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  margin-bottom: 2rem;
+}
+
+.bookings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.bookings-table thead {
+  background: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.bookings-table thead th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.bookings-table tbody tr {
+  border-bottom: 1px solid #dee2e6;
+  transition: background-color 0.2s ease;
+}
+
+.bookings-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
+.bookings-table tbody tr.status-cancelled {
+  opacity: 0.7;
+}
+
+.bookings-table td {
+  padding: 1rem;
+  color: #555;
+}
+
+.booking-number {
+  font-weight: 600;
+  color: #639922;
+  width: 50px;
+}
+
+.booker-name {
+  font-weight: 600;
+  color: #333;
+  min-width: 150px;
+}
+
+.booker-email {
+  min-width: 200px;
+  word-break: break-word;
+}
+
+.booker-contact {
+  min-width: 150px;
+  font-weight: 500;
+  color: #639922;
+}
+
+.booker-contact .no-contact {
+  color: #999;
+}
+
+.booker-location {
+  min-width: 120px;
+  color: #666;
+}
+
+.booked-date {
+  min-width: 180px;
+  white-space: nowrap;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.booking-status {
+  text-align: center;
+}
+
+.booking-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.status-badge {
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+
+.status-badge.status-confirmed {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-badge.status-cancelled {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.btn-small {
+  padding: 0.4rem 0.8rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  background: #639922;
+  color: white;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.btn-small:hover {
+  background: #528419;
+  transform: translateY(-1px);
+}
+
+.export-info {
+  text-align: center;
+  padding: 1.5rem;
+  background: #fff3cd;
+  border-radius: 8px;
+  border-left: 4px solid #ffc107;
+}
+
+.export-info p {
+  margin: 0;
+  color: #856404;
+  font-weight: 600;
+}
+
+.error-container {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.error-message {
+  font-size: 1.1rem;
+  color: #721c24;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8d7da;
+  border-radius: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 4rem 2rem;
+  font-size: 1.2rem;
+  color: #639922;
+  font-weight: 600;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: #639922;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #528419;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .bookings-table-responsive {
+    font-size: 0.9rem;
+  }
+
+  .bookings-table thead th,
+  .bookings-table td {
+    padding: 0.75rem;
+  }
+
+  .booking-actions {
+    gap: 0.3rem;
+  }
+
+  .btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .event-header {
+    padding: 1.5rem;
+  }
+
+  .event-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .capacity-info {
+    gap: 1rem;
+  }
+
+  .bookings-table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .bookings-table {
+    font-size: 0.85rem;
+  }
+
+  .bookings-table thead th,
+  .bookings-table td {
+    padding: 0.5rem;
+  }
+
+  .booker-name,
+  .booker-email,
+  .booker-contact {
+    min-width: 100px;
+  }
+
+  .btn-small {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .booking-actions {
+    gap: 0.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .event-bookings-container {
+    padding: 1rem;
+  }
+
+  .event-header {
+    padding: 1rem;
+  }
+
+  .event-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .event-date {
+    font-size: 1rem;
+  }
+
+  .capacity-info {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .bookings-table {
+    font-size: 0.75rem;
+  }
+
+  .bookings-table thead th {
+    padding: 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .bookings-table td {
+    padding: 0.4rem;
+  }
+
+  .btn-small {
+    padding: 0.25rem 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .booking-number {
+    width: 35px;
+  }
+
+  .booking-actions {
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .btn-small {
+    width: 100%;
+  }
+}

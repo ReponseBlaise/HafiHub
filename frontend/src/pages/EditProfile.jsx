@@ -11,8 +11,10 @@ export default function EditProfile() {
     name: '',
     email: '',
     location: '',
-    contact: ''
+    contact: '',
+    profilePictureUrl: ''
   });
+  const [profilePicturePreview, setProfilePicturePreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -35,8 +37,12 @@ export default function EditProfile() {
         name: user.name || '',
         email: user.email || '',
         location: user.location || '',
-        contact: user.contact || ''
+        contact: user.contact || '',
+        profilePictureUrl: user.profilePictureUrl || ''
       });
+      if (user.profilePictureUrl) {
+        setProfilePicturePreview(user.profilePictureUrl);
+      }
     }
   }, [user, navigate]);
 
@@ -46,6 +52,44 @@ export default function EditProfile() {
       ...prev,
       [name]: value
     }));
+  };
+
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select an image file');
+        return;
+      }
+
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setError('Image size must be less than 5MB');
+        return;
+      }
+
+      // Read file as data URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result;
+        setFormData(prev => ({
+          ...prev,
+          profilePictureUrl: result
+        }));
+        setProfilePicturePreview(result);
+      };
+      reader.readAsDataURL(file);
+      setError('');
+    }
+  };
+
+  const handleRemoveProfilePicture = () => {
+    setFormData(prev => ({
+      ...prev,
+      profilePictureUrl: ''
+    }));
+    setProfilePicturePreview(null);
   };
 
   const handleSubmit = async (e) => {
@@ -84,7 +128,8 @@ export default function EditProfile() {
         name: formData.name.trim(),
         email: formData.email.trim(),
         location: formData.location.trim(),
-        contact: formData.contact.trim()
+        contact: formData.contact.trim(),
+        profilePictureUrl: formData.profilePictureUrl || null
       });
       
       setSuccess('Profile updated successfully!');
@@ -110,6 +155,38 @@ export default function EditProfile() {
         {success && <div className="success-message">{success}</div>}
 
         <form onSubmit={handleSubmit} className="edit-profile-form">
+          <div className="form-group profile-picture-group">
+            <label htmlFor="profilePicture">Profile Picture</label>
+            <div className="profile-picture-container">
+              {profilePicturePreview && (
+                <div className="profile-picture-preview">
+                  <img src={profilePicturePreview} alt="Profile Preview" />
+                  <button
+                    type="button"
+                    onClick={handleRemoveProfilePicture}
+                    className="remove-picture-btn"
+                    title="Remove profile picture"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+              <div className="profile-picture-input-group">
+                <label htmlFor="profilePicture" className="picture-upload-label">
+                  <input
+                    type="file"
+                    id="profilePicture"
+                    accept="image/*"
+                    onChange={handleProfilePictureChange}
+                    style={{ display: 'none' }}
+                  />
+                  <span className="upload-button">📷 Upload Image</span>
+                  <span className="upload-hint">JPG, PNG (Max 5MB)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
           <div className="form-group">
             <label htmlFor="name">Full Name *</label>
             <input

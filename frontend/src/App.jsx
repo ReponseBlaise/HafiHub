@@ -15,6 +15,8 @@ import Events from './pages/Events';
 import EventDetail from './pages/EventDetail';
 import CreateEvent from './pages/CreateEvent';
 import EditEvent from './pages/EditEvent';
+import HostEvents from './pages/HostEvents';
+import EventBookings from './pages/EventBookings';
 import News from './pages/News';
 import NewsDetail from './pages/NewsDetail';
 
@@ -75,6 +77,15 @@ function NewsDetailGuard() {
   return <NewsDetail />;
 }
 
+// Guard component to validate event bookings ID
+function EventBookingsGuard() {
+  const { eventId } = useParams();
+  if (!eventId || eventId === 'undefined' || isNaN(parseInt(eventId))) {
+    return <Navigate to="/host/events" replace />;
+  }
+  return <EventBookings />;
+}
+
 function AppContent() {
   const { loading } = useAuth();
 
@@ -111,6 +122,8 @@ function AppContent() {
           <Route path="/event/:id" element={<EventDetailGuard />} />
           <Route path="/event/:id/edit" element={<EditEventGuard />} />
           <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="/host/events" element={<HostEvents />} />
+          <Route path="/events/:eventId/bookings" element={<EventBookingsGuard />} />
           <Route path="/news" element={<News />} />
           <Route path="/news/:id" element={<NewsDetailGuard />} />
           <Route path="*" element={<Navigate to="/" />} />

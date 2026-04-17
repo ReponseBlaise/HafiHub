@@ -272,6 +272,20 @@ class ApiService {
     return this.delete(`/events/${id}`);
   }
 
+  /**
+   * Get events hosted by current user
+   */
+  getHostEvents(page = 1, limit = 10) {
+    return this.get(`/events/host/my-events?page=${page}&limit=${limit}`);
+  }
+
+  /**
+   * Get bookings for a specific event (host only)
+   */
+  getEventBookings(eventId) {
+    return this.get(`/events/${eventId}/bookings`);
+  }
+
   // ===== BOOKINGS =====
 
   /**
