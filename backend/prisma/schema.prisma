@@ -22,11 +22,27 @@ model User {
   updatedAt           DateTime @updatedAt
 
   // Relationships
-  posts     Post[]
-  comments  Comment[]
-  likes     Like[]
-  events    Event[]
-  bookings  Booking[]
+  posts                 Post[]
+  comments              Comment[]
+  likes                 Like[]
+  events                Event[]
+  bookings              Booking[]
+  reviews               Review[]
+  reviewedBy            Review[] @relation("reviewedBy")
+  notifications         Notification[]
+  jobBids               JobBid[]
+  jobAcceptances        JobAcceptance[]
+  paymentProfile        PaymentProfile?
+  transactions          Transaction[]
+  onboardingProgress    OnboardingProgress?
+  availability          UserAvailability?
+  languagePreference    UserLanguagePreference?
+  blockedByUsers        UserBlock[] @relation("blockedUser")
+  blockedUsers          UserBlock[] @relation("blockingUser")
+  reports               Report[] @relation("reportedBy")
+  reportedReports       Report[] @relation("reportedUser")
+  photos                UserPhoto[]
+  analyticsData         UserAnalytics?
 
   @@index([email])
   @@index([createdAt])
@@ -48,6 +64,9 @@ model Post {
   user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments    Comment[]
   likes       Like[]
+  bids        JobBid[] @relation("bids")
+  acceptances JobAcceptance[] @relation("acceptances")
+  statusHistory JobStatusHistory[] @relation("statusHistory")
 
   @@index([userId])
   @@index([category])
@@ -146,4 +165,289 @@ model News {
   @@index([category])
   @@index([featured])
   @@index([createdAt])
+}
+
+// ============ SPRINT 10: REVIEWS & RATINGS ============
+
+model Review {
+  id        Int     @id @default(autoincrement())
+  rating    Int     // 1-5 stars
+  title     String?
+  comment   String?
+  postId    Int?
+  jobId     Int?
+  userId    Int
+  reviewedUserId Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviewedUser User @relation("reviewedBy", fields: [reviewedUserId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([reviewedUserId])
+  @@index([rating])
+  @@index([createdAt])
+}
+
+// ============ SPRINT 12: NOTIFICATIONS ============
+
+model Notification {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  type      String  // comment, like, booking_confirmed, job_bid, payment, etc
+  title     String
+  message   String
+  relatedId Int?    // Post, Event, Job ID etc
+  isRead    Boolean @default(false)
+  createdAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
+
+// ============ SPRINT 13: JOB WORKFLOW ============
+
+model JobBid {
+  id        Int     @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  bidAmount Float
+  message   String?
+  status    String  @default("pending") // pending, accepted, rejected
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post      Post    @relation("bids", fields: [postId], references: [id], onDelete: Cascade)
+  user      User    @relation("bids", fields: [userId], references: [id], onDelete: Cascade)
+  acceptance JobAcceptance?
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+  @@index([status])
+}
+
+model JobAcceptance {
+  id        Int     @id @default(autoincrement())
+  bidId     Int
+  postId    Int
+  userId    Int
+  acceptedAt DateTime @default(now())
+
+  bid       JobBid  @relation(fields: [bidId], references: [id], onDelete: Cascade)
+  post      Post    @relation("acceptances", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([bidId])
+  @@index([postId])
+  @@index([userId])
+}
+
+model JobStatusHistory {
+  id        Int     @id @default(autoincrement())
+  postId    Int
+  status    String  // POSTED, ACCEPTED, IN_PROGRESS, COMPLETED, CANCELLED
+  changedBy Int
+  reason    String?
+  createdAt DateTime @default(now())
+
+  post      Post    @relation("statusHistory", fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([status])
+}
+
+// Extend Post model relationships (add after Post definition)
+
+// ============ SPRINT 14: PAYMENT INTEGRATION ============
+
+model PaymentProfile {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  paymentMethod String // mtn, airtel
+  phoneNumber String
+  verified  Boolean @default(false)
+  verificationCode String?
+  verificationAttempts Int @default(0)
+  lastVerificationAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([verified])
+}
+
+model Transaction {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  type      String  // payment_received, payment_sent, withdrawal, refund
+  amount    Float
+  currency  String  @default("RWF")
+  status    String  @default("pending") // pending, completed, failed
+  jobId     Int?
+  relatedTransactionId Int?
+  externalId String? // MTN/Airtel transaction ID
+  metadata  String? // JSON metadata
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+}
+
+// ============ SPRINT 15: USER ONBOARDING ============
+
+model OnboardingProgress {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  step      Int     @default(1) // 1-5
+  profileSetup    Boolean @default(false)
+  skillsAdded     Boolean @default(false)
+  paymentSetup    Boolean @default(false)
+  photoUploaded   Boolean @default(false)
+  completed       Boolean @default(false)
+  skippedSteps    String? // JSON array of skipped step numbers
+  completedAt     DateTime?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([completed])
+}
+
+// ============ SPRINT 16: USER AVAILABILITY ============
+
+model UserAvailability {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  status    String  @default("AVAILABLE_SOON") // AVAILABLE_NOW, AVAILABLE_SOON, UNAVAILABLE
+  availableFrom DateTime?
+  availableUntil DateTime?
+  hourlyRate Float?
+  timezone  String  @default("Africa/Kigali")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+}
+
+// ============ SPRINT 17: BLOCKING & REPORTING ============
+
+model UserBlock {
+  id        Int     @id @default(autoincrement())
+  blockingUserId Int
+  blockedUserId Int
+  reason    String?
+  createdAt DateTime @default(now())
+
+  blockingUser User @relation("blockingUser", fields: [blockingUserId], references: [id], onDelete: Cascade)
+  blockedUser  User @relation("blockedUser", fields: [blockedUserId], references: [id], onDelete: Cascade)
+
+  @@unique([blockingUserId, blockedUserId])
+  @@index([blockingUserId])
+  @@index([blockedUserId])
+}
+
+model Report {
+  id        Int     @id @default(autoincrement())
+  reportedById Int
+  reportedUserId Int?
+  postId    Int?
+  reason    String  // SCAM, HARASSMENT, SPAM, INAPPROPRIATE, OTHER
+  description String?
+  status    String  @default("pending") // pending, investigating, resolved, dismissed
+  resolvedBy Int?
+  resolution String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  reportedBy User @relation("reportedBy", fields: [reportedById], references: [id], onDelete: Cascade)
+  reportedUser User? @relation("reportedUser", fields: [reportedUserId], references: [id], onDelete: SetNull)
+
+  @@index([reportedById])
+  @@index([reportedUserId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// ============ SPRINT 18: FILE UPLOAD & IMAGES ============
+
+model UserPhoto {
+  id        Int     @id @default(autoincrement())
+  userId    Int
+  url       String
+  format    String  @default("webp") // jpg, png, webp
+  size      Int     // bytes
+  width     Int?
+  height    Int?
+  isPrimary Boolean @default(false)
+  uploadedAt DateTime @default(now())
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isPrimary])
+}
+
+// ============ SPRINT 19: MULTI-LANGUAGE SUPPORT ============
+
+model UserLanguagePreference {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  language  String  @default("en") // en, rw, fr
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([language])
+}
+
+// ============ SPRINT 21: ANALYTICS & ECONOMIC TRACKING ============
+
+model UserAnalytics {
+  id        Int     @id @default(autoincrement())
+  userId    Int     @unique
+  totalEarnings Float @default(0)
+  totalSpent    Float @default(0)
+  jobsCompleted Int   @default(0)
+  jobsPosted    Int   @default(0)
+  avgRating     Float @default(0)
+  reviewCount   Int   @default(0)
+  lastUpdated   DateTime @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([totalEarnings])
+  @@index([jobsCompleted])
+}
+
+model PlatformAnalytics {
+  id        Int     @id @default(autoincrement())
+  date      DateTime @unique
+  totalUsers Int
+  activeUsers Int
+  totalTransactions Float
+  totalJobs Int
+  jobsCompleted Int
+  avgJobValue Float
+  createdAt DateTime @default(now())
+
+  @@index([date])
 }

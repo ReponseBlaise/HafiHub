@@ -9,6 +9,13 @@ import userRoutes from './routes/user.routes.js';
 import eventRoutes from './routes/event.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import newsRoutes from './routes/news.routes.js';
+import reviewRoutes from './routes/review.routes.js';
+import notificationRoutes from './routes/notification.routes.js';
+import jobRoutes from './routes/job.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
+import onboardingRoutes from './routes/onboarding.routes.js';
+import utilityRoutes from './routes/utility.routes.js';
+import analyticsRoutes from './routes/analytics.routes.js';
 
 dotenv.config();
 
@@ -30,6 +37,13 @@ app.use('/users', userRoutes);
 app.use('/events', eventRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/news', newsRoutes);
+app.use('/reviews', reviewRoutes);
+app.use('/notifications', notificationRoutes);
+app.use('/jobs', jobRoutes);
+app.use('/payments', paymentRoutes);
+app.use('/onboarding', onboardingRoutes);
+app.use('/utility', utilityRoutes);
+app.use('/analytics', analyticsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
