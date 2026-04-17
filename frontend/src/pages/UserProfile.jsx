@@ -64,6 +64,8 @@ export default function UserProfile() {
           <div className="profile-info">
             <h1>{user.name}</h1>
             <p className="profile-email">{user.email}</p>
+            {user.contact && <p className="profile-contact">📱 {user.contact}</p>}
+            {user.location && <p className="profile-location">📍 {user.location}</p>}
             
             <div className="profile-stats">
               <div className="stat">

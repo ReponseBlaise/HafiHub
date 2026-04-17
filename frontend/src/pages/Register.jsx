@@ -6,6 +6,7 @@ import '../styles/auth.css';
 export default function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [contact, setContact] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,9 +14,26 @@ export default function Register() {
   const navigate = useNavigate();
   const { register } = useAuth();
 
+  // Email validation regex
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+
+    // Validate email format
+    if (!validateEmail(email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+
+    // Validate contact is provided
+    if (!contact.trim()) {
+      setError('Contact information is required');
+      return;
+    }
 
     // Validate passwords match
     if (password !== confirmPassword) {
@@ -31,7 +49,7 @@ export default function Register() {
 
     setLoading(true);
 
-    const result = await register(email, name, password);
+    const result = await register(email, name, password, contact);
 
     if (result.success) {
       navigate('/');
@@ -69,6 +87,17 @@ export default function Register() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Contact (Phone or WhatsApp)</label>
+            <input
+              type="text"
+              value={contact}
+              onChange={(e) => setContact(e.target.value)}
+              placeholder="+250 7XX XXX XXX"
               required
             />
           </div>

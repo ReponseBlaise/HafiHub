@@ -11,11 +11,16 @@ export default function EditProfile() {
     name: '',
     email: '',
     location: '',
-    bio: ''
+    contact: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Email validation regex
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   useEffect(() => {
     // Redirect if not authenticated
@@ -30,7 +35,7 @@ export default function EditProfile() {
         name: user.name || '',
         email: user.email || '',
         location: user.location || '',
-        bio: user.bio || ''
+        contact: user.contact || ''
       });
     }
   }, [user, navigate]);
@@ -55,31 +60,36 @@ export default function EditProfile() {
       setError('Email is required');
       return;
     }
+    if (!validateEmail(formData.email)) {
+      setError('Please enter a valid email address');
+      return;
+    }
+    if (!formData.contact.trim()) {
+      setError('Contact information is required');
+      return;
+    }
 
     setLoading(true);
     setError('');
     setSuccess('');
 
     try {
-      // Since we don't have a dedicated update profile endpoint yet,
-      // we'll store the profile in localStorage and show a success message
-      // In a real app, this would call: await api.put(`/users/${user.id}`, formData);
-      
       if (!user || !user.id) {
         setError('User session lost. Please login again.');
         return;
       }
 
-      // For now, update localStorage with additional user info
-      const updatedUser = {
-        ...user,
-        ...formData
-      };
-      localStorage.setItem('userProfile', JSON.stringify(updatedUser));
+      // Call the update profile endpoint
+      await api.updateProfile({
+        name: formData.name.trim(),
+        email: formData.email.trim(),
+        location: formData.location.trim(),
+        contact: formData.contact.trim()
+      });
       
       setSuccess('Profile updated successfully!');
       
-      // Redirect after 2 seconds - capture userId now to avoid race conditions
+      // Redirect after 2 seconds
       const userId = user.id;
       setTimeout(() => {
         navigate(`/profile/${userId}`);
@@ -127,6 +137,19 @@ export default function EditProfile() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="contact">Contact (Phone or WhatsApp) *</label>
+            <input
+              type="text"
+              id="contact"
+              name="contact"
+              value={formData.contact}
+              onChange={handleChange}
+              placeholder="+250 7XX XXX XXX"
+              required
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="location">Location</label>
             <input
               type="text"
@@ -135,18 +158,6 @@ export default function EditProfile() {
               value={formData.location}
               onChange={handleChange}
               placeholder="City, Region"
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="bio">Bio</label>
-            <textarea
-              id="bio"
-              name="bio"
-              value={formData.bio}
-              onChange={handleChange}
-              placeholder="Tell us about yourself..."
-              rows="5"
             />
           </div>
 

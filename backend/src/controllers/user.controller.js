@@ -46,3 +46,29 @@ export const searchUsers = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, location, contact } = req.body;
+
+    if (!name || !email || !contact) {
+      return res.status(400).json({ error: 'Name, email, and contact are required' });
+    }
+
+    const updatedUser = await userService.updateProfile(userId, {
+      name,
+      email,
+      location,
+      contact
+    });
+
+    res.json({
+      success: true,
+      data: updatedUser
+    });
+  } catch (error) {
+    const statusCode = error.message.includes('not found') ? 404 : error.message.includes('already in use') ? 409 : 400;
+    res.status(statusCode).json({ error: error.message });
+  }
+};

@@ -2,14 +2,14 @@ import * as authService from '../services/auth.service.js';
 
 export const register = async (req, res, next) => {
   try {
-    const { email, name, password } = req.body;
+    const { email, name, password, contact } = req.body;
 
     // Validate input
-    if (!email || !name || !password) {
-      return res.status(400).json({ error: 'Missing required fields' });
+    if (!email || !name || !password || !contact) {
+      return res.status(400).json({ error: 'Missing required fields: email, name, password, contact' });
     }
 
-    const result = await authService.registerUser(email, name, password);
+    const result = await authService.registerUser(email, name, password, contact);
     const { token, ...userData } = result;
     res.status(201).json({
       success: true,

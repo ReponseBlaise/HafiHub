@@ -24,9 +24,9 @@ export const AuthProvider = ({ children }) => {
   /**
    * Register new user
    */
-  const register = async (email, name, password) => {
+  const register = async (email, name, password, contact) => {
     try {
-      const response = await api.register(email, name, password);
+      const response = await api.register(email, name, password, contact);
       const { token, data } = response;
 
       setToken(token);

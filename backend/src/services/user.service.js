@@ -128,3 +128,56 @@ export const searchUsers = async (query, limit = 20, skip = 0) => {
     },
   };
 };
+
+export const updateProfile = async (userId, { name, email, location, contact }) => {
+  if (!userId) {
+    throw new Error('User ID required');
+  }
+
+  // Validate required fields
+  if (!name || !email || !contact) {
+    throw new Error('Name, email, and contact are required');
+  }
+
+  // Check if user exists
+  const user = await prisma.user.findUnique({
+    where: { id: userId }
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  // Check if new email is already taken by another user
+  if (email !== user.email) {
+    const existingEmail = await prisma.user.findUnique({
+      where: { email }
+    });
+    if (existingEmail) {
+      throw new Error('Email already in use');
+    }
+  }
+
+  // Update user profile
+  const updatedUser = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      name: name.trim(),
+      email: email.toLowerCase(),
+      location: location?.trim() || null,
+      contact: contact.trim(),
+      updatedAt: new Date()
+    },
+    select: {
+      id: true,
+      email: true,
+      name: true,
+      location: true,
+      contact: true,
+      createdAt: true,
+      updatedAt: true
+    }
+  });
+
+  return updatedUser;
+};

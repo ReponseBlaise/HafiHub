@@ -98,8 +98,8 @@ class ApiService {
   /**
    * Register new user
    */
-  register(email, name, password) {
-    return this.post('/auth/register', { email, name, password });
+  register(email, name, password, contact) {
+    return this.post('/auth/register', { email, name, password, contact });
   }
 
   /**
@@ -336,6 +336,15 @@ class ApiService {
    */
   deleteNews(id) {
     return this.delete(`/news/${id}`);
+  }
+
+  // ===== USER PROFILE =====
+
+  /**
+   * Update user profile
+   */
+  updateProfile(profileData) {
+    return this.put('/users/profile/update', profileData);
   }
 }
 
