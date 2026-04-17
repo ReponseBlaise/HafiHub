@@ -38,9 +38,11 @@ export default function Navbar() {
               <Link to="/create-post" className="nav-link btn-primary">
                 + Create Post
               </Link>
-              <Link to={`/profile/${user?.id}`} className="nav-link">
-                Profile
-              </Link>
+              {user && user.id && (
+                <Link to={`/profile/${user.id}`} className="nav-link">
+                  Profile
+                </Link>
+              )}
               <button onClick={handleLogout} className="nav-link logout-btn">
                 Logout
               </button>

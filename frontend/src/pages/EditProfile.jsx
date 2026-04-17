@@ -65,6 +65,11 @@ export default function EditProfile() {
       // we'll store the profile in localStorage and show a success message
       // In a real app, this would call: await api.put(`/users/${user.id}`, formData);
       
+      if (!user || !user.id) {
+        setError('User session lost. Please login again.');
+        return;
+      }
+
       // For now, update localStorage with additional user info
       const updatedUser = {
         ...user,
@@ -74,9 +79,10 @@ export default function EditProfile() {
       
       setSuccess('Profile updated successfully!');
       
-      // Redirect after 2 seconds
+      // Redirect after 2 seconds - capture userId now to avoid race conditions
+      const userId = user.id;
       setTimeout(() => {
-        navigate(`/profile/${user.id}`);
+        navigate(`/profile/${userId}`);
       }, 2000);
     } catch (err) {
       setError(err.message || 'Failed to update profile');
@@ -155,7 +161,13 @@ export default function EditProfile() {
             <button 
               type="button" 
               className="cancel-btn"
-              onClick={() => navigate(`/profile/${user.id}`)}
+              onClick={() => {
+                if (user && user.id) {
+                  navigate(`/profile/${user.id}`);
+                } else {
+                  navigate('/');
+                }
+              }}
             >
               Cancel
             </button>
