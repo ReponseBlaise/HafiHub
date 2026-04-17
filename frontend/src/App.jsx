@@ -30,6 +30,51 @@ function UserProfileGuard() {
   return <UserProfile />;
 }
 
+// Guard component to validate post ID
+function PostDetailGuard() {
+  const { id } = useParams();
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/" replace />;
+  }
+  return <PostDetail />;
+}
+
+// Guard component to validate post edit ID
+function EditPostGuard() {
+  const { id } = useParams();
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/" replace />;
+  }
+  return <EditPost />;
+}
+
+// Guard component to validate event ID
+function EventDetailGuard() {
+  const { id } = useParams();
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/events" replace />;
+  }
+  return <EventDetail />;
+}
+
+// Guard component to validate event edit ID
+function EditEventGuard() {
+  const { id } = useParams();
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/events" replace />;
+  }
+  return <EditEvent />;
+}
+
+// Guard component to validate news ID
+function NewsDetailGuard() {
+  const { id } = useParams();
+  if (!id || id === 'undefined' || isNaN(parseInt(id))) {
+    return <Navigate to="/news" replace />;
+  }
+  return <NewsDetail />;
+}
+
 function AppContent() {
   const { loading } = useAuth();
 
@@ -57,17 +102,17 @@ function AppContent() {
           <Route path="/search" element={<Search />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/post/:id" element={<PostDetail />} />
-          <Route path="/post/:id/edit" element={<EditPost />} />
+          <Route path="/post/:id" element={<PostDetailGuard />} />
+          <Route path="/post/:id/edit" element={<EditPostGuard />} />
           <Route path="/create-post" element={<CreatePost />} />
           <Route path="/profile/:id" element={<UserProfileGuard />} />
           <Route path="/edit-profile" element={<EditProfile />} />
           <Route path="/events" element={<Events />} />
-          <Route path="/event/:id" element={<EventDetail />} />
-          <Route path="/event/:id/edit" element={<EditEvent />} />
+          <Route path="/event/:id" element={<EventDetailGuard />} />
+          <Route path="/event/:id/edit" element={<EditEventGuard />} />
           <Route path="/create-event" element={<CreateEvent />} />
           <Route path="/news" element={<News />} />
-          <Route path="/news/:id" element={<NewsDetail />} />
+          <Route path="/news/:id" element={<NewsDetailGuard />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </main>
