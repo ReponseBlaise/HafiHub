@@ -1,0 +1,146 @@
+// Generator block (for Prisma client)
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Datasource (SQLite for development, change to PostgreSQL for production)
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  name      String
+  password  String
+  location  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  posts     Post[]
+  comments  Comment[]
+  likes     Like[]
+  events    Event[]
+  bookings  Booking[]
+
+  @@index([email])
+  @@index([createdAt])
+}
+
+// Post model
+model Post {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  category    String  // job, quick_job, product, event
+  location    String
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  comments    Comment[]
+  likes       Like[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([location])
+  @@index([createdAt])
+}
+
+// Comment model
+model Comment {
+  id        Int     @id @default(autoincrement())
+  content   String
+  postId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@index([userId])
+}
+
+// Like model
+model Like {
+  id        Int     @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  // Relationships
+  post      Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@index([postId])
+  @@index([userId])
+}
+
+// Event model
+model Event {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  category    String  // workshop, conference, meetup, concert
+  location    String
+  eventDate   DateTime
+  capacity    Int
+  booked      Int     @default(0)
+  imageUrl    String?
+  userId      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relationships
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+
+  @@index([userId])
+  @@index([category])
+  @@index([location])
+  @@index([eventDate])
+  @@index([createdAt])
+}
+
+// Booking model
+model Booking {
+  id        Int     @id @default(autoincrement())
+  eventId   Int
+  userId    Int
+  status    String  @default("confirmed") // confirmed, cancelled
+  bookedAt  DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relationships
+  event     Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+}
+
+// News model
+model News {
+  id        Int     @id @default(autoincrement())
+  title     String
+  content   String
+  imageUrl  String?
+  category  String  // market_news, event_highlights, tips
+  featured  Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([category])
+  @@index([featured])
+  @@index([createdAt])
+}
