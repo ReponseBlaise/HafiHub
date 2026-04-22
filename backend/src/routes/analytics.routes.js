@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   // Language
   getUserLanguage,
   updateLanguage,
@@ -13,7 +12,9 @@ const {
   // Low Bandwidth
   getMinimalUserProfile,
   getMinimalPosts
-} = require('../controllers/analytics.controller');
+} from '../controllers/analytics.controller.js';
+
+const router = express.Router();
 
 // ============ LANGUAGE ROUTES ============
 router.get('/language', authMiddleware, getUserLanguage);
@@ -31,4 +32,4 @@ router.get('/economic-impact', getEconomicImpact);
 router.get('/minimal/user/:userId', getMinimalUserProfile);
 router.get('/minimal/posts', getMinimalPosts);
 
-module.exports = router;
+export default router;

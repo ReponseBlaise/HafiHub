@@ -50,7 +50,7 @@ export const searchUsers = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { name, email, location, contact } = req.body;
+    const { name, email, location, contact, profilePictureUrl } = req.body;
 
     if (!name || !email || !contact) {
       return res.status(400).json({ error: 'Name, email, and contact are required' });
@@ -60,7 +60,8 @@ export const updateProfile = async (req, res) => {
       name,
       email,
       location,
-      contact
+      contact,
+      profilePictureUrl
     });
 
     res.json({

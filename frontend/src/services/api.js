@@ -3,7 +3,7 @@
  * All requests go through this service for consistency
  */
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:5000';
 
 class ApiService {
   constructor() {
@@ -96,7 +96,21 @@ class ApiService {
   // ===== AUTHENTICATION =====
 
   /**
-   * Register new user
+   * Send verification code to email
+   */
+  sendVerificationCode(email) {
+    return this.post('/auth/send-verification', { email });
+  }
+
+  /**
+   * Verify email with code
+   */
+  verifyEmail(email, code) {
+    return this.post('/auth/verify-email', { email, code });
+  }
+
+  /**
+   * Register new user (after email verification)
    */
   register(email, name, password, contact) {
     return this.post('/auth/register', { email, name, password, contact });
@@ -149,12 +163,13 @@ class ApiService {
   /**
    * Create post
    */
-  createPost(title, description, category, location) {
+  createPost(title, description, category, location, imageUrl = '') {
     return this.post('/posts', {
       title,
       description,
       category,
       location,
+      imageUrl: imageUrl || null
     });
   }
 

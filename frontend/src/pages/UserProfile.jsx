@@ -32,8 +32,9 @@ export default function UserProfile() {
       setError('');
       
       // Fetch user profile
-      const userData = await api.get(`/users/${id}`);
-      setUser(userData.data);
+      const response = await api.get(`/users/${id}`);
+      const userData = response.data || response;
+      setUser(userData);
       
       // Fetch user's posts
       const postsData = await api.get(`/posts?userId=${id}`);

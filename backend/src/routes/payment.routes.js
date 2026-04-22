@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   createPaymentProfile,
   getPaymentProfile,
   initiateVerification,
@@ -10,7 +9,9 @@ const {
   getTransactionHistory,
   getTransaction,
   paymentWebhook
-} = require('../controllers/payment.controller');
+} from '../controllers/payment.controller.js';
+
+const router = express.Router();
 
 // Payment profile routes
 router.post('/profile', authMiddleware, createPaymentProfile);
@@ -30,4 +31,4 @@ router.get('/transactions/:id', authMiddleware, getTransaction);
 // Webhook for payment confirmation
 router.post('/webhook/payment', paymentWebhook);
 
-module.exports = router;
+export default router;

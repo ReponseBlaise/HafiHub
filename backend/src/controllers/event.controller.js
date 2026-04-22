@@ -58,13 +58,21 @@ export async function getEvent(req, res) {
 
 export async function createEvent(req, res) {
   try {
-    const { title, description, category, location, eventDate, capacity, imageUrl } = req.body;
+    const { title, description, category, location, eventDate, capacity, imageUrl, isPaid, amount, currency } = req.body;
     const userId = req.user.id;
 
     if (!title || !description || !category || !location || !eventDate || !capacity) {
       return res.status(400).json({
         success: false,
         error: 'Missing required fields'
+      });
+    }
+
+    // Validate paid event fields
+    if (isPaid && (!amount || amount <= 0)) {
+      return res.status(400).json({
+        success: false,
+        error: 'For paid events, amount must be greater than 0'
       });
     }
 
@@ -77,7 +85,10 @@ export async function createEvent(req, res) {
         eventDate: new Date(eventDate),
         capacity: parseInt(capacity),
         imageUrl: imageUrl || null,
-        userId
+        userId,
+        isPaid: isPaid || false,
+        amount: isPaid ? parseFloat(amount) : null,
+        currency: isPaid ? (currency || 'RWF') : 'RWF'
       },
       include: { user: { select: { id: true, name: true, email: true } } }
     });
@@ -91,7 +102,7 @@ export async function createEvent(req, res) {
 export async function updateEvent(req, res) {
   try {
     const { id } = req.params;
-    const { title, description, category, location, eventDate, capacity, imageUrl } = req.body;
+    const { title, description, category, location, eventDate, capacity, imageUrl, isPaid, amount, currency } = req.body;
     const userId = req.user.id;
 
     const event = await prisma.event.findUnique({ where: { id: parseInt(id) } });
@@ -103,6 +114,17 @@ export async function updateEvent(req, res) {
       return res.status(403).json({ success: false, error: 'Not authorized' });
     }
 
+    // Validate paid event fields
+    const willBePaid = isPaid !== undefined ? isPaid : event.isPaid;
+    const willHaveAmount = amount !== undefined ? amount : event.amount;
+    
+    if (willBePaid && (!willHaveAmount || willHaveAmount <= 0)) {
+      return res.status(400).json({
+        success: false,
+        error: 'For paid events, amount must be greater than 0'
+      });
+    }
+
     const updated = await prisma.event.update({
       where: { id: parseInt(id) },
       data: {
@@ -112,7 +134,10 @@ export async function updateEvent(req, res) {
         location: location || event.location,
         eventDate: eventDate ? new Date(eventDate) : event.eventDate,
         capacity: capacity ? parseInt(capacity) : event.capacity,
-        imageUrl: imageUrl !== undefined ? imageUrl : event.imageUrl
+        imageUrl: imageUrl !== undefined ? imageUrl : event.imageUrl,
+        isPaid: isPaid !== undefined ? isPaid : event.isPaid,
+        amount: isPaid !== undefined ? (isPaid ? parseFloat(amount) : null) : event.amount,
+        currency: isPaid !== undefined ? (isPaid ? (currency || 'RWF') : 'RWF') : event.currency
       },
       include: { user: { select: { id: true, name: true, email: true } } }
     });

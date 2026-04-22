@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   getOnboardingProgress,
   completeProfileSetup,
   completeSkillsSetup,
@@ -9,7 +8,9 @@ const {
   completePhotoUpload,
   completeOnboarding,
   skipStep
-} = require('../controllers/onboarding.controller');
+} from '../controllers/onboarding.controller.js';
+
+const router = express.Router();
 
 // Get onboarding progress
 router.get('/progress', authMiddleware, getOnboardingProgress);
@@ -26,4 +27,4 @@ router.post('/skip-step', authMiddleware, skipStep);
 // Complete entire onboarding
 router.post('/complete', authMiddleware, completeOnboarding);
 
-module.exports = router;
+export default router;

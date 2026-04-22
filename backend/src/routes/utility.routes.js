@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   // Availability
   getAvailability,
   updateAvailability,
@@ -17,7 +16,9 @@ const {
   uploadUserPhoto,
   getUserPhotos,
   deleteUserPhoto
-} = require('../controllers/utility.controller');
+} from '../controllers/utility.controller.js';
+
+const router = express.Router();
 
 // ============ AVAILABILITY ROUTES ============
 router.get('/availability/:userId', getAvailability);
@@ -38,4 +39,4 @@ router.post('/photos', authMiddleware, uploadUserPhoto);
 router.get('/photos/:userId', getUserPhotos);
 router.delete('/photos/:id', authMiddleware, deleteUserPhoto);
 
-module.exports = router;
+export default router;

@@ -10,19 +10,22 @@ import eventRoutes from './routes/event.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import newsRoutes from './routes/news.routes.js';
 import reviewRoutes from './routes/review.routes.js';
-import notificationRoutes from './routes/notification.routes.js';
-import jobRoutes from './routes/job.routes.js';
-import paymentRoutes from './routes/payment.routes.js';
-import onboardingRoutes from './routes/onboarding.routes.js';
-import utilityRoutes from './routes/utility.routes.js';
-import analyticsRoutes from './routes/analytics.routes.js';
+// import notificationRoutes from './routes/notification.routes.js';
+// import jobRoutes from './routes/job.routes.js';
+// import paymentRoutes from './routes/payment.routes.js';
+// import onboardingRoutes from './routes/onboarding.routes.js';
+// import utilityRoutes from './routes/utility.routes.js';
+// import analyticsRoutes from './routes/analytics.routes.js';
 
 dotenv.config();
 
 const app = express();
 
 // Middleware
-app.use(express.json());
+// Increase body size limit for image uploads (base64 can be large)
+// 50MB limit handles 10MB image files (base64 is ~33% larger)
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use(cors({
   origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
   credentials: true
@@ -38,12 +41,12 @@ app.use('/events', eventRoutes);
 app.use('/bookings', bookingRoutes);
 app.use('/news', newsRoutes);
 app.use('/reviews', reviewRoutes);
-app.use('/notifications', notificationRoutes);
-app.use('/jobs', jobRoutes);
-app.use('/payments', paymentRoutes);
-app.use('/onboarding', onboardingRoutes);
-app.use('/utility', utilityRoutes);
-app.use('/analytics', analyticsRoutes);
+// app.use('/notifications', notificationRoutes);
+// app.use('/jobs', jobRoutes);
+// app.use('/payments', paymentRoutes);
+// app.use('/onboarding', onboardingRoutes);
+// app.use('/utility', utilityRoutes);
+// app.use('/analytics', analyticsRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {
@@ -63,7 +66,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
   console.log(`🚀 HafiHub backend running on http://localhost:${PORT}`);

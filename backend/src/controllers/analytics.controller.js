@@ -1,9 +1,9 @@
-const { prisma } = require('../db');
+import prisma from '../utils/db.js';
 
 // ============ SPRINT 19: MULTI-LANGUAGE SUPPORT ============
 
 // Get user language preference
-exports.getUserLanguage = async (req, res) => {
+export const getUserLanguage = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -24,7 +24,7 @@ exports.getUserLanguage = async (req, res) => {
 };
 
 // Update language preference
-exports.updateLanguage = async (req, res) => {
+export const updateLanguage = async (req, res) => {
   try {
     const userId = req.user.id;
     const { language } = req.body;
@@ -58,7 +58,7 @@ exports.updateLanguage = async (req, res) => {
 // ============ SPRINT 21: ANALYTICS & ECONOMIC TRACKING ============
 
 // Get user analytics
-exports.getUserAnalytics = async (req, res) => {
+export const getUserAnalytics = async (req, res) => {
   try {
     const userId = req.user.id;
 
@@ -79,7 +79,7 @@ exports.getUserAnalytics = async (req, res) => {
 };
 
 // Update user earnings
-exports.updateUserEarnings = async (userId, amount) => {
+export const updateUserEarnings = async (userId, amount) => {
   try {
     let analytics = await prisma.userAnalytics.findUnique({
       where: { userId }
@@ -103,7 +103,7 @@ exports.updateUserEarnings = async (userId, amount) => {
 };
 
 // Update job completion stats
-exports.recordJobCompletion = async (userId, amount) => {
+export const recordJobCompletion = async (userId, amount) => {
   try {
     let analytics = await prisma.userAnalytics.findUnique({
       where: { userId }
@@ -134,7 +134,7 @@ exports.recordJobCompletion = async (userId, amount) => {
 };
 
 // Get platform analytics
-exports.getPlatformAnalytics = async (req, res) => {
+export const getPlatformAnalytics = async (req, res) => {
   try {
     const { startDate, endDate } = req.query;
 
@@ -154,7 +154,7 @@ exports.getPlatformAnalytics = async (req, res) => {
 };
 
 // Get user statistics
-exports.getUserStatistics = async (req, res) => {
+export const getUserStatistics = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -189,7 +189,7 @@ exports.getUserStatistics = async (req, res) => {
 };
 
 // Get economic impact (Rwanda context)
-exports.getEconomicImpact = async (req, res) => {
+export const getEconomicImpact = async (req, res) => {
   try {
     const totalUsers = await prisma.user.count();
     const totalTransactions = await prisma.transaction.count({
@@ -226,7 +226,7 @@ exports.getEconomicImpact = async (req, res) => {
 // ============ SPRINT 20: LOW-BANDWIDTH OPTIMIZATION ============
 
 // Get minimized user profile (for low bandwidth)
-exports.getMinimalUserProfile = async (req, res) => {
+export const getMinimalUserProfile = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -268,7 +268,7 @@ exports.getMinimalUserProfile = async (req, res) => {
 };
 
 // Get minimized posts list (for low bandwidth)
-exports.getMinimalPosts = async (req, res) => {
+export const getMinimalPosts = async (req, res) => {
   try {
     const { page = 1, limit = 10 } = req.query;
 

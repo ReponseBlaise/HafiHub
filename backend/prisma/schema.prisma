@@ -48,6 +48,20 @@ model User {
   @@index([createdAt])
 }
 
+// Email Verification model for registration flow
+model EmailVerification {
+  id        Int     @id @default(autoincrement())
+  email     String  @unique
+  code      String  // 6-digit verification code
+  verified  Boolean @default(false)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email])
+  @@index([createdAt])
+}
+
 // Post model
 model Post {
   id          Int     @id @default(autoincrement())
@@ -119,6 +133,9 @@ model Event {
   booked      Int     @default(0)
   imageUrl    String?
   userId      Int
+  isPaid      Boolean @default(false) // Whether the event is paid or free
+  amount      Float?  // Amount to be paid (nullable for free events)
+  currency    String  @default("RWF") // Currency code
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -130,25 +147,33 @@ model Event {
   @@index([category])
   @@index([location])
   @@index([eventDate])
+  @@index([isPaid])
   @@index([createdAt])
 }
 
 // Booking model
 model Booking {
-  id        Int     @id @default(autoincrement())
-  eventId   Int
-  userId    Int
-  status    String  @default("confirmed") // confirmed, cancelled
-  bookedAt  DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              Int     @id @default(autoincrement())
+  eventId         Int
+  userId          Int
+  status          String  @default("confirmed") // confirmed, cancelled
+  paymentStatus   String  @default("pending") // pending, completed, failed, refunded
+  amountPaid      Float?
+  transactionId   Int?
+  bookedAt        DateTime @default(now())
+  paidAt          DateTime?
+  updatedAt       DateTime @updatedAt
 
   // Relationships
-  event     Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event           Event   @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user            User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transaction     Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
 
   @@unique([eventId, userId])
   @@index([eventId])
   @@index([userId])
+  @@index([paymentStatus])
+  @@index([transactionId])
 }
 
 // News model
@@ -222,7 +247,7 @@ model JobBid {
   updatedAt DateTime @updatedAt
 
   post      Post    @relation("bids", fields: [postId], references: [id], onDelete: Cascade)
-  user      User    @relation("bids", fields: [userId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   acceptance JobAcceptance?
 
   @@unique([postId, userId])
@@ -240,6 +265,7 @@ model JobAcceptance {
 
   bid       JobBid  @relation(fields: [bidId], references: [id], onDelete: Cascade)
   post      Post    @relation("acceptances", fields: [postId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([bidId])
   @@index([postId])
@@ -285,11 +311,12 @@ model PaymentProfile {
 model Transaction {
   id        Int     @id @default(autoincrement())
   userId    Int
-  type      String  // payment_received, payment_sent, withdrawal, refund
+  type      String  // payment_received, payment_sent, withdrawal, refund, event_booking
   amount    Float
   currency  String  @default("RWF")
   status    String  @default("pending") // pending, completed, failed
   jobId     Int?
+  eventId   Int? // Event ID for event booking payments
   relatedTransactionId Int?
   externalId String? // MTN/Airtel transaction ID
   metadata  String? // JSON metadata
@@ -297,10 +324,12 @@ model Transaction {
   updatedAt DateTime @updatedAt
 
   user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bookings  Booking[] // Bookings associated with this transaction
 
   @@index([userId])
   @@index([status])
   @@index([type])
+  @@index([eventId])
   @@index([createdAt])
 }
 

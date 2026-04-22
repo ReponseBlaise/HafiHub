@@ -1,4 +1,4 @@
-import { prisma } from '../db.js';
+import prisma from '../utils/db.js';
 
 // Get all reviews for a user
 export const getUserReviews = async (req, res) => {

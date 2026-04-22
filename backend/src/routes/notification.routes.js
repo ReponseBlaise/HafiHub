@@ -1,13 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   getNotifications,
   markAsRead,
   markAllAsRead,
   deleteNotification,
   getUnreadCount
-} = require('../controllers/notification.controller');
+} from '../controllers/notification.controller.js';
+
+const router = express.Router();
 
 // Get user's notifications
 router.get('/', authMiddleware, getNotifications);
@@ -24,4 +25,4 @@ router.post('/read-all', authMiddleware, markAllAsRead);
 // Delete notification
 router.delete('/:id', authMiddleware, deleteNotification);
 
-module.exports = router;
+export default router;

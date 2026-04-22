@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const { authMiddleware } = require('../middleware/auth');
-const {
+import express from 'express';
+import { authMiddleware } from '../middlewares/auth.js';
+import {
   placeBid,
   getPostBids,
   acceptBid,
@@ -9,7 +8,9 @@ const {
   updateJobStatus,
   getJobStatusHistory,
   getMyBids
-} = require('../controllers/job.controller');
+} from '../controllers/job.controller.js';
+
+const router = express.Router();
 
 // Get my bids (worker view)
 router.get('/my-bids', authMiddleware, getMyBids);
@@ -32,4 +33,4 @@ router.patch('/:postId/status', authMiddleware, updateJobStatus);
 // Get job status history
 router.get('/:postId/status-history', getJobStatusHistory);
 
-module.exports = router;
+export default router;

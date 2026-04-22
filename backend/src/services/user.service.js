@@ -12,6 +12,8 @@ export const getUserProfile = async (userId) => {
       email: true,
       name: true,
       location: true,
+      contact: true,
+      profilePictureUrl: true,
       createdAt: true,
       updatedAt: true,
     },
@@ -46,28 +48,19 @@ export const getUserProfile = async (userId) => {
     },
   });
 
-  // Get recent posts by user
-  const recentPosts = await prisma.post.findMany({
-    where: { userId },
-    select: {
-      id: true,
-      title: true,
-      category: true,
-      location: true,
-      createdAt: true,
-    },
-    orderBy: { createdAt: 'desc' },
-    take: 5,
-  });
-
+  // Flatten user object with stats for frontend
   return {
-    user,
-    stats: {
-      postsCount,
-      commentsCount,
-      likesReceived,
-    },
-    recentPosts,
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    location: user.location,
+    contact: user.contact,
+    profilePictureUrl: user.profilePictureUrl,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    postsCount,
+    commentsCount,
+    likesReceived,
   };
 };
 
@@ -129,7 +122,7 @@ export const searchUsers = async (query, limit = 20, skip = 0) => {
   };
 };
 
-export const updateProfile = async (userId, { name, email, location, contact }) => {
+export const updateProfile = async (userId, { name, email, location, contact, profilePictureUrl }) => {
   if (!userId) {
     throw new Error('User ID required');
   }
@@ -166,6 +159,7 @@ export const updateProfile = async (userId, { name, email, location, contact }) 
       email: email.toLowerCase(),
       location: location?.trim() || null,
       contact: contact.trim(),
+      profilePictureUrl: profilePictureUrl || null,
       updatedAt: new Date()
     },
     select: {

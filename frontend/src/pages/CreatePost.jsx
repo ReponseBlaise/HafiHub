@@ -11,8 +11,10 @@ export default function CreatePost() {
     title: '',
     description: '',
     category: 'product',
-    location: ''
+    location: '',
+    imageUrl: ''
   });
+  const [imagePreview, setImagePreview] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -36,6 +38,44 @@ export default function CreatePost() {
     }));
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setError('Please select an image file (JPG, PNG, GIF, etc.)');
+        return;
+      }
+
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Image size must be less than 10MB');
+        return;
+      }
+
+      // Read file as data URL
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result;
+        setFormData(prev => ({
+          ...prev,
+          imageUrl: result
+        }));
+        setImagePreview(result);
+      };
+      reader.readAsDataURL(file);
+      setError('');
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData(prev => ({
+      ...prev,
+      imageUrl: ''
+    }));
+    setImagePreview(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -56,7 +96,13 @@ export default function CreatePost() {
 
     try {
       setLoading(true);
-      const response = await api.post('/posts', formData);
+      const response = await api.createPost(
+        formData.title,
+        formData.description,
+        formData.category,
+        formData.location,
+        formData.imageUrl
+      );
       alert('Post created successfully!');
       navigate(`/post/${response.data.id}`);
     } catch (err) {
@@ -96,6 +142,38 @@ export default function CreatePost() {
               rows="6"
               required
             />
+          </div>
+
+          <div className="form-group image-upload-group">
+            <label htmlFor="postImage">Image (Optional)</label>
+            <div className="image-container">
+              {imagePreview && (
+                <div className="image-preview">
+                  <img src={imagePreview} alt="Post Preview" />
+                  <button
+                    type="button"
+                    onClick={handleRemoveImage}
+                    className="remove-image-btn"
+                    title="Remove image"
+                  >
+                    ✕
+                  </button>
+                </div>
+              )}
+              <div className="image-input-group">
+                <label htmlFor="postImage" className="image-upload-label">
+                  <input
+                    type="file"
+                    id="postImage"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    style={{ display: 'none' }}
+                  />
+                  <span className="upload-button">📷 Add Image</span>
+                  <span className="upload-hint">JPG, PNG, GIF (Max 10MB)</span>
+                </label>
+              </div>
+            </div>
           </div>
 
           <div className="form-row">
